@@ -18,13 +18,9 @@ A standardized way to communicate auth failure modes
 
 class AuthError(Exception):
     def __init__(self, error, status_code):
-        print("error --> "+str(error))
-        print("status_code --> "+str(status_code))
-        print("status_code --> "+str(status_code))
         self.error = error
         self.status_code = status_code
-        print("self.error --> "+str(self.error))
-        print("self.status_code --> "+str(self.status_code))
+        abort(self.status_code)
 
 
 # Auth Header

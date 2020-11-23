@@ -84,21 +84,18 @@ def post_drink(paload):
     print(str(data))
     title=request.get_json()['title']
     recipe=request.get_json()['recipe']
-    print("title --> "+str(title))
-    print("recipe --> "+str(recipe))
+    #print("title --> "+str(title))
+    #print("recipe --> "+str(recipe))
     
     drink = Drink(title=title, recipe=recipe)
-    print(str(drink))
+    #print(str(drink))
     
-    '''
+   
     
     drink.insert()
     return jsonify({"success": True, "drinks": [drink.long()]})
-    '''
-    return "done"
-    #except Exception:
-    #    abort(422)
 
+   
 '''
 @TODO implement endpoint
     PATCH /drinks/<id>
