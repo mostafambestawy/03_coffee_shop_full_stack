@@ -39,7 +39,7 @@ def login_result():
 '''
 
 @app.route('/drinks',methods=['GET'])
-def get_drink(paload):
+def get_drink():
     drinks=Drink.query.all()
     drink_array=[]
     for drink in drinks:
