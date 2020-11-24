@@ -17,18 +17,20 @@ CORS(app)
 !! NOTE THIS WILL DROP ALL RECORDS AND START YOUR DB FROM SCRATCH
 !! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN
 '''
-#db_drop_and_create_all()
+# db_drop_and_create_all()
+
 
 @app.route('/test')
 def test():
     return "Server Up !, keep Coding "
 
 
-@app.route('/login-results',methods=['Get','Post'])
+@app.route('/login-results', methods=['Get', 'Post'])
 def login_result():
     return str(get_token_auth_header())
 
-## ROUTES
+
+# ROUTES
 '''
 @TO-dine-DO implement endpoint
     GET /drinks
@@ -38,13 +40,15 @@ def login_result():
         or appropriate status code indicating reason for failure
 '''
 
-@app.route('/drinks',methods=['GET'])
+
+@app.route('/drinks', methods=['GET'])
 def get_drink():
-    drinks=Drink.query.all()
-    drink_array=[]
+    drinks = Drink.query.all()
+    drink_array = []
     for drink in drinks:
         drink_array.append(drink.short())
     return jsonify({"success": True, "drinks": drinks})
+
 
 '''
 @TODO implement endpoint
@@ -55,15 +59,15 @@ def get_drink():
         or appropriate status code indicating reason for failure
 '''
 
-@app.route('/drinks-detail',methods=['GET'])
+
+@app.route('/drinks-detail', methods=['GET'])
 @requires_auth(permissions=['get:drinks-detail'])
 def get_drink_detail(paload):
-    drinks=Drink.query.all()
-    drink_array=[]
+    drinks = Drink.query.all()
+    drink_array = []
     for drink in drinks:
         drink_array.append(drink.long())
     return jsonify({"success": True, "drinks": drinks})
-
 
 
 '''
@@ -80,21 +84,23 @@ def get_drink_detail(paload):
     "recipe":{"color": "red", "name":"drink_1_ingre_1", "parts":2}
 }
 '''
-@app.route('/drinks',methods=['POST'])
+
+
+@app.route('/drinks', methods=['POST'])
 @requires_auth(permissions=['post:drinks'])
 def post_drink(paload):
     try:
-        title=request.get_json()['title']
-        recipe=request.get_json()['recipe']
-        if len(Drink.query.filter(Drink.title==str(title)).all())>0:
+        title = request.get_json()['title']
+        recipe = request.get_json()['recipe']
+        if len(Drink.query.filter(Drink.title == str(title)).all()) > 0:
             abort(422)
         drink = Drink(title=title, recipe=recipe)
         drink.insert()
         return jsonify({"success": True, "drinks": [drink.long()]})
     except Exception:
         abort(422)
-  
-   
+
+
 '''
 @TODO implement endpoint
     PATCH /drinks/<id>
@@ -106,21 +112,24 @@ def post_drink(paload):
     returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the updated drink
         or appropriate status code indicating reason for failure
 '''
-@app.route('/drinks/<id>',methods=['PATCH'])
+
+
+@app.route('/drinks/<id>', methods=['PATCH'])
 @requires_auth(permissions=['patch:drinks'])
-def patch_drink(paload,id):
+def patch_drink(paload, id):
     try:
-        drink=Drink.query.filter(Drink.id==int(id)).first()
-        if not drink: 
+        drink = Drink.query.filter(Drink.id == int(id)).first()
+        if not drink:
             abort(404)
-        title=request.get_json()['title']
-        recipe=request.get_json()['recipe']
-        drink.title=title
-        drink.recipe=str(recipe).replace("'",'"')
+        title = request.get_json()['title']
+        recipe = request.get_json()['recipe']
+        drink.title = title
+        drink.recipe = str(recipe).replace("'", '"')
         Drink.update(drink)
         return jsonify({"success": True, "drinks": [drink.long()]})
     except Exception:
         abort(422)
+
 
 '''
 @TODO implement endpoint
@@ -134,17 +143,33 @@ def patch_drink(paload,id):
 '''
 
 
-## Error Handling
+@app.route('/drinks/<id>', methods=['DELETE'])
+@requires_auth(permissions=['delete:drinks'])
+def delete_drink(paload, id):
+    try:
+        drink = Drink.query.filter(Drink.id == int(id)).first()
+        if not drink:
+            abort(404)
+        Drink.delete(drink)
+        return jsonify({"success": True, "delete": id})
+    except Exception:
+        abort(422)
+
+
+# Error Handling
 '''
 Example error handling for unprocessable entity
 '''
+
+
 @app.errorhandler(422)
 def unprocessable(error):
     return jsonify({
-                    "success": False, 
-                    "error": 422,
-                    "message": "unprocessable"
-                    }), 422
+        "success": False,
+        "error": 422,
+        "message": "unprocessable"
+    }), 422
+
 
 '''
 @TODO implement error handlers using the @app.errorhandler(error) decorator
