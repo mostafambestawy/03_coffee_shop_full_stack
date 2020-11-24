@@ -43,17 +43,25 @@ class Drink(db.Model):
     # the required datatype is [{'color': string, 'name':string, 'parts':number}]
     recipe =  Column(String(180), nullable=False)
 
+    def __init__(self,title, recipe):
+        self.title=title
+        self.recipe=str(recipe).replace("'",'"')
+        
+
+
     '''
     short()
         short form representation of the Drink model
     '''
     def short(self):
         #print("json.loads(self.recipe) --> "+json.loads(self.recipe))
+        print("(self.recipe) --> "+str(self.recipe))
         short_recipe = [{"color": r["color"], "parts": r["parts"]} for r in json.loads(str(self.recipe))]
+        
         return {
             'id': self.id,
             'title': self.title,
-            'recipe': short_recipe
+            'recipe': str(short_recipe).replace("'",'"')
         }
 
     '''
@@ -105,4 +113,4 @@ class Drink(db.Model):
         db.session.commit()
 
     def __repr__(self):
-        return json.dumps(self.short())
+        return json.dumps(str(self.short()).replace("'",'"'))

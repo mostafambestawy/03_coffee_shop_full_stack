@@ -75,26 +75,25 @@ def get_drink_detail(paload):
     returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the newly created drink
         or appropriate status code indicating reason for failure
         recipe --> [{'color': string, 'name':string, 'parts':number}]
+     json data=   {
+    "title":"drink_1 title",
+    "recipe":{"color": "red", "name":"drink_1_ingre_1", "parts":2}
+}
 '''
 @app.route('/drinks',methods=['POST'])
 @requires_auth(permissions=['post:drinks'])
 def post_drink(paload):
-    #try:
-    data=request.get_json()
-    print(str(data))
-    title=request.get_json()['title']
-    recipe=request.get_json()['recipe']
-    #print("title --> "+str(title))
-    #print("recipe --> "+str(recipe))
-    
-    drink = Drink(title=title, recipe=recipe)
-    #print(str(drink))
-    
-   
-    
-    drink.insert()
-    return jsonify({"success": True, "drinks": [drink.long()]})
-
+    try:
+        title=request.get_json()['title']
+        recipe=request.get_json()['recipe']
+        if len(Drink.query.filter(Drink.title==str(title)).all())>0:
+            abort(422)
+        drink = Drink(title=title, recipe=recipe)
+        drink.insert()
+        return jsonify({"success": True, "drinks": [drink.long()]})
+    except Exception:
+        abort(422)
+  
    
 '''
 @TODO implement endpoint

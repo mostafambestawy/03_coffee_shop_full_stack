@@ -63,8 +63,8 @@ def get_token_auth_header():
 
 
 def check_permissions(permissions, payload):
-    print("received permission in paload in check_permissions --> "+str(payload['permissions']))
-    print("required permission--> "+str(permissions))
+    #print("received permission in paload in check_permissions --> "+str(payload['permissions']))
+    #print("required permission--> "+str(permissions))
     if 'permissions' not in payload:
         abort(401)
     for permission in permissions:
