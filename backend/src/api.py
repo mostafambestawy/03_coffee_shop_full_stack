@@ -32,7 +32,7 @@ def login_result():
 
 # ROUTES
 '''
-@TO-dine-DO implement endpoint
+@TO-done-DO implement endpoint
     GET /drinks
         it should be a public endpoint
         it should contain only the drink.short() data representation
@@ -51,7 +51,7 @@ def get_drink():
 
 
 '''
-@TODO implement endpoint
+@TO-done-DO implement endpoint
     GET /drinks-detail
         it should require the 'get:drinks-detail' permission
         it should contain the drink.long() data representation
@@ -102,7 +102,7 @@ def post_drink(paload):
 
 
 '''
-@TODO implement endpoint
+@TO-done-DO implement endpoint
     PATCH /drinks/<id>
         where <id> is the existing model id
         it should respond with a 404 error if <id> is not found
@@ -117,28 +117,25 @@ def post_drink(paload):
 @app.route('/drinks/<id>', methods=['PATCH'])
 @requires_auth(permissions=['patch:drinks'])
 def patch_drink(paload, id):
-    # try:
-    drink = Drink.query.filter(Drink.id == int(id)).first()
-    if not drink:
-        abort(404)
-    #print("request.get_json()['recipe'] --> "+str(request.get_json()['recipe']))
+    try:
+        drink = Drink.query.filter(Drink.id == int(id)).first()
+        if not drink:
+            abort(404)
+        if ('title' not in request.get_json()) and ('recipe' not in request.get_json()):
+            abort(422)
+        if 'title' in request.get_json():
+            drink.title = request.get_json()['title']
+        if 'recipe' in request.get_json():
+            drink.recipe = str(request.get_json()['recipe']).replace("'", '"')
+        Drink.update(drink)
+        return jsonify({"success": True, "drinks": [drink.long()]})
 
-    if ('title' not in request.get_json()) and ('recipe' not in request.get_json()):
+    except Exception:
         abort(422)
-    if 'title'  in request.get_json():
-         drink.title = request.get_json()['title']
-    if 'recipe'  in request.get_json():
-        drink.recipe = str(request.get_json()['recipe']).replace("'", '"')
-    Drink.update(drink)
-    return jsonify({"success": True, "drinks": [drink.long()]})
-
-    # return "done"
-    # except Exception:
-    #    abort(422)
 
 
 '''
-@TODO implement endpoint
+@TO-done-DO implement endpoint
     DELETE /drinks/<id>
         where <id> is the existing model id
         it should respond with a 404 error if <id> is not found
@@ -178,7 +175,7 @@ def unprocessable(error):
 
 
 '''
-@TODO implement error handlers using the @app.errorhandler(error) decorator
+@TO-done-DO implement error handlers using the @app.errorhandler(error) decorator
     each error handler should return (with approprate messages):
              jsonify({
                     "success": False, 
@@ -199,7 +196,7 @@ def not_found_error(error):
 
 
 '''
-@TODO implement error handler for 404
+@TO-done-DO implement error handler for 404
     error handler should conform to general task above 
 '''
 
@@ -223,7 +220,7 @@ def unauthorized(error):
 
 
 '''
-@TODO implement error handler for AuthError
+@TO-done-DO implement error handler for AuthError
     error handler should conform to general task above 
 '''
 

@@ -1,5 +1,5 @@
 import json
-from flask import request, _request_ctx_stack,abort
+from flask import request, _request_ctx_stack, abort
 from functools import wraps
 from jose import jwt
 from urllib.request import urlopen
@@ -20,7 +20,6 @@ class AuthError(Exception):
     def __init__(self, error, status_code):
         self.error = error
         self.status_code = status_code
-        #abort(self.status_code)
 
 
 # Auth Header
@@ -63,8 +62,6 @@ def get_token_auth_header():
 
 
 def check_permissions(permissions, payload):
-    #print("received permission in paload in check_permissions --> "+str(payload['permissions']))
-    #print("required permission--> "+str(permissions))
     if 'permissions' not in payload:
         abort(401)
     for permission in permissions:
@@ -92,15 +89,14 @@ def verify_decode_jwt(token):
     try:
         # fix base64 decoding issue
         if "==" not in token:
-            token=token+"==+" 
-        #print("trail of token in verify_decode_jwt --->"+str(token)[-3:])
+            token = token+"==+"
         # GET THE PUBLIC KEY FROM AUTH0
         jsonurl = urlopen(f'https://{AUTH0_DOMAIN}/.well-known/jwks.json')
         jwks = json.loads(jsonurl.read())
-        
+
         # GET THE DATA IN THE HEADER
         unverified_header = jwt.get_unverified_header(token)
-        
+
         # CHOOSE OUR KEY
         rsa_key = {}
         if 'kid' not in unverified_header:
@@ -118,7 +114,7 @@ def verify_decode_jwt(token):
                     'n': key['n'],
                     'e': key['e']
                 }
-        
+
         # Finally, verify!!!
         if rsa_key:
             try:
@@ -153,14 +149,13 @@ def verify_decode_jwt(token):
             abort(401)
     except Exception:
         raise AuthError({
-                    'code': 'invalid_header',
+            'code': 'invalid_header',
                     'description': 'Unable to parse authentication token.'
-                }, 400)
-
+        }, 400)
 
 
 '''
-@TODO implement @requires_auth(permission) decorator method
+@TO-done-DO implement @requires_auth(permission) decorator method
     @INPUTS
         permission: string permission (i.e. 'post:drink')
 
