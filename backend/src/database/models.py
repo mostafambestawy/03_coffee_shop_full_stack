@@ -61,7 +61,7 @@ class Drink(db.Model):
         return {
             'id': self.id,
             'title': self.title,
-            'recipe': str(short_recipe).replace("'",'"')
+            'recipe': short_recipe
         }
 
     '''

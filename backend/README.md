@@ -93,6 +93,8 @@ The `--reload` flag will detect file changes and restart the server automaticall
     - Right-clicking the collection folder for barista and manager, navigate to the authorization tab, and including the JWT in the token field (you should have noted these JWTs).
     - Run the collection and correct any errors.
     - Export the collection overwriting the one we've included so that we have your proper JWTs during review!
+8. To obtain a valid token 
+    https://horizonsswsolution.us.auth0.com/authorize?audience=drinks&response_type=token&client_id=0oAyosvWrO3n2GNCbKxJI16ZyKII3eBR&redirect_uri=http%3A%2F%2F127.0.0.1%3A8080%2Flogin-results
 
 ### Implement The Server
 

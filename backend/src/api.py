@@ -47,7 +47,7 @@ def get_drink():
     drink_array = []
     for drink in drinks:
         drink_array.append(drink.short())
-    return jsonify({"success": True, "drinks": drinks})
+    return jsonify({"success": True, "drinks": drink_array})
 
 
 '''
@@ -67,7 +67,7 @@ def get_drink_detail(paload):
     drink_array = []
     for drink in drinks:
         drink_array.append(drink.long())
-    return jsonify({"success": True, "drinks": drinks})
+    return jsonify({"success": True, "drinks": drink_array})
 
 
 '''
@@ -117,18 +117,24 @@ def post_drink(paload):
 @app.route('/drinks/<id>', methods=['PATCH'])
 @requires_auth(permissions=['patch:drinks'])
 def patch_drink(paload, id):
-    try:
-        drink = Drink.query.filter(Drink.id == int(id)).first()
-        if not drink:
-            abort(404)
-        title = request.get_json()['title']
-        recipe = request.get_json()['recipe']
-        drink.title = title
-        drink.recipe = str(recipe).replace("'", '"')
-        Drink.update(drink)
-        return jsonify({"success": True, "drinks": [drink.long()]})
-    except Exception:
+    # try:
+    drink = Drink.query.filter(Drink.id == int(id)).first()
+    if not drink:
+        abort(404)
+    #print("request.get_json()['recipe'] --> "+str(request.get_json()['recipe']))
+
+    if ('title' not in request.get_json()) and ('recipe' not in request.get_json()):
         abort(422)
+    if 'title'  in request.get_json():
+         drink.title = request.get_json()['title']
+    if 'recipe'  in request.get_json():
+        drink.recipe = str(request.get_json()['recipe']).replace("'", '"')
+    Drink.update(drink)
+    return jsonify({"success": True, "drinks": [drink.long()]})
+
+    # return "done"
+    # except Exception:
+    #    abort(422)
 
 
 '''
@@ -205,6 +211,15 @@ def forbidden(error):
         "error": 403,
         "message": "forbidden"
     }), 403
+
+
+@app.errorhandler(401)
+def unauthorized(error):
+    return jsonify({
+        "success": False,
+        "error": 401,
+        "message": "un authorized"
+    }), 401
 
 
 '''
