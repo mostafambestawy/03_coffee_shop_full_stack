@@ -10,6 +10,26 @@
 
 This project depends on Nodejs and Node Package Manager (NPM). Before continuing, you must download and install Node (the download includes NPM) from [https://nodejs.com/en/download](https://nodejs.org/en/download/).
 
+https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04
+
+```bash
+sudo apt update
+sudo apt install nodejs
+nodejs -v
+```
+
+Output
+v10.19.0
+
+```bash
+sudo python3 -m venv env
+. env/bin/activate
+sudo apt install npm
+sudo npm install -g ionic
+sudo ionic serve
+```
+
+
 #### Installing Ionic Cli
 
 The Ionic Command Line Interface is required to serve and build the frontend. Instructions for installing the CLI  is in the [Ionic Framework Docs](https://ionicframework.com/docs/installation/cli).

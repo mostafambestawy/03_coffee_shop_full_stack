@@ -94,6 +94,7 @@ def post_drink(paload):
         recipe = request.get_json()['recipe']
         if len(Drink.query.filter(Drink.title == str(title)).all()) > 0:
             abort(422)
+        print("post data --> "+ str(request.get_json()))
         drink = Drink(title=title, recipe=recipe)
         drink.insert()
         return jsonify({"success": True, "drinks": [drink.long()]})
@@ -123,6 +124,7 @@ def patch_drink(paload, id):
             abort(404)
         if ('title' not in request.get_json()) and ('recipe' not in request.get_json()):
             abort(422)
+        print("Patch data --> "+ str(request.get_json()))
         if 'title' in request.get_json():
             drink.title = request.get_json()['title']
         if 'recipe' in request.get_json():
