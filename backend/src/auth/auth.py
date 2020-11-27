@@ -88,17 +88,14 @@ def check_permissions(permissions, payload):
 def verify_decode_jwt(token):
     try:
         # fix base64 decoding issue
-        print("token before fixing --> "+token)
         if "==" not in token:
             token = token+"=="
-        print("token after fixing --> "+token)
         # GET THE PUBLIC KEY FROM AUTH0
         jsonurl = urlopen(f'https://{AUTH0_DOMAIN}/.well-known/jwks.json')
         jwks = json.loads(jsonurl.read())
 
         # GET THE DATA IN THE HEADER
         unverified_header = jwt.get_unverified_header(token)
-        print("unverified_header --> "+str(unverified_header))
 
         # CHOOSE OUR KEY
         rsa_key = {}
@@ -144,7 +141,6 @@ def verify_decode_jwt(token):
                     'code': 'invalid_claims',
                     'description': 'Incorrect claims. Please, check the audience and issuer.'
                 }, 401)
-            
 
             except Exception:
                 raise AuthError({
@@ -156,18 +152,16 @@ def verify_decode_jwt(token):
             abort(401)
 
     except jwt.JWTError:
-            raise AuthError({
-                'code': 'invalid_header',
-                'description': 'Error decoding token headers.'
-            }, 401)
-    
-    except Exception as e:
-        print("Exception --> "+str(e))
+        raise AuthError({
+            'code': 'invalid_header',
+            'description': 'Error decoding token headers.'
+        }, 401)
+
+    except Exception:
         raise AuthError({
             'code': 'invalid_header',
                     'description': 'Unable to parse authentication token.'
         }, 401)
-    
 
 
 '''
@@ -187,9 +181,7 @@ def requires_auth(permissions=[]):
         @wraps(f)
         def wrapper(*args, **kwargs):
             token = get_token_auth_header()
-            #print("token --> "+str(token))
             payload = verify_decode_jwt(token)
-            #print("payload --> "+str(payload))
             check_permissions(permissions, payload)
             return f(payload, *args, **kwargs)
 

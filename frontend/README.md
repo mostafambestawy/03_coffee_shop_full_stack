@@ -22,8 +22,6 @@ Output
 v10.19.0
 
 ```bash
-sudo python3 -m venv env
-. env/bin/activate
 sudo apt install npm
 sudo npm install -g ionic
 sudo ionic serve
