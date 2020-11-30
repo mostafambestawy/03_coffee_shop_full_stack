@@ -88,7 +88,7 @@ def check_permissions(permissions, payload):
 def verify_decode_jwt(token):
     try:
         # fix base64 decoding issue
-        if "==" not in token:
+        if token[-2] != "==":
             token = token+"=="
         # GET THE PUBLIC KEY FROM AUTH0
         jsonurl = urlopen(f'https://{AUTH0_DOMAIN}/.well-known/jwks.json')
@@ -114,7 +114,6 @@ def verify_decode_jwt(token):
                     'n': key['n'],
                     'e': key['e']
                 }
-        print("rsa_key --> "+str(rsa_key))
 
         # Finally, verify!!!
         if rsa_key:
